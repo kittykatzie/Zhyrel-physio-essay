@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zhyrel Physio Essay</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffe4ef, #f5e8ff);
+    color: #70465b;
+    text-align: center;
+}
+
+.container {
+    max-width: 750px;
+    margin: 25px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 8px 25px #d89ab533;
+}
+
+h1 {
+    color: #d66b9a;
+    font-size: 32px;
+}
+
+h2 {
+    color: #c85d8d;
+}
+
+p {
+    line-height: 1.6;
+}
+
+button {
+    border: none;
+    border-radius: 25px;
+    padding: 13px 22px;
+    margin: 7px;
+    background: #ed9fbe;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #d66b9a;
+}
+
+textarea {
+    width: 100%;
+    height: 280px;
+    padding: 15px;
+    border: 2px solid #f3c5d9;
+    border-radius: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    resize: vertical;
+    background: #fffafd;
+}
+
+.hidden {
+    display: none;
+}
+
+#wheel {
+    width: 300px;
+    max-width: 100%;
+    height: 300px;
+    margin: 20px auto;
+    border-radius: 50%;
+    border: 6px solid white;
+    box-shadow: 0 5px 20px #d89ab555;
+    background: conic-gradient(
+        #f6b6cf 0deg 120deg,
+        #e5d0ff 120deg 240deg,
+        #c9efdc 240deg 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 4s cubic-bezier(.15,.7,.15,1);
+}
+
+.wheel-center {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #d66b9a;
+    border: 4px solid #f7d3e2;
+}
+
+#result {
+    line-height: 2;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.correct {
+    color: #248456;
+    background: #e1f7e9;
+    border-radius: 4px;
+}
+
+.wrong {
+    color: #c33d64;
+    background: #ffe0e9;
+    border-radius: 4px;
+}
+
+.missing {
+    color: #9b6514;
+    background: #fff0c7;
+    border-radius: 4px;
+}
+
+.answer-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background: #fff1f7;
+    text-align: left;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.points {
+    font-size: 20px;
+    color: #d66b9a;
+    font-weight: bold;
+}
+
+.back {
+    background: #d8c6f5;
+    color: #674d86;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+
+    .container {
+        padding: 16px;
+        margin: 12px auto;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    #wheel {
+        width: 250px;
+        height: 250px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- START PAGE -->
+
+    <section id="home">
+        <h1> Physio Essay </h1>
+
+        <p>
+        hi! memorize and pracetice essay here! 
+
+        <h2>Ready to study? </h2>
+
+        <p>Spin the wheel, write your essay from memory,
+        and check your answers!</p>
+
+        <button onclick="showPage('wheelPage')">
+            START 
+        </button>
+    </section>
+
+
+    <!-- SPIN THE WHEEL PAGE -->
+
+    <section id="wheelPage" class="hidden">
+
+        <h1> Spin the Wheel!</h1>
+
+        <p>Which essay will you practice today?</p>
+
+        <div id="wheel">
+            <div class="wheel-center">SPIN </div>
+        </div>
+
+        <h2 id="topic">Ready to spin!</h2>
+
+        <button id="spinButton" onclick="spinWheel()">
+            SPIN THE WHEEL 
+        </button>
+
+        <br>
+
+        <button class="back" onclick="showPage('home')">
+            ← BACK
+        </button>
+
+        <button id="typeButton" class="hidden"
+        onclick="startEssay()">
+            TYPE MY ESSAY ✍️
+        </button>
+
+    </section>
+
+
+    <!-- TYPING PAGE -->
+
+    <section id="typingPage" class="hidden">
+
+        <h1>📝 Essay Practice</h1>
+
+        <h2 id="selectedTopic"></h2>
+
+        <p>Type your essay from memory</p>
+
+        <p>The original essay will stay hidden
+        until you submit your answer.</p>
+
+        <textarea id="essayInput"
+        placeholder="Start typing your essay here..."></textarea>
+
+        <br>
+
+        <button onclick="checkEssay()">
+            CHECK MY ESSAY ✓
+        </button>
+
+        <br>
+
+        <button class="back" onclick="showPage('wheelPage')">
+            ← BACK TO WHEEL
+        </button>
+
+    </section>
+
+
+    <!-- RESULTS PAGE -->
+
+    <section id="resultPage" class="hidden">
+
+        <h1>Your Results </h1>
+
+        <h2 id="accuracy">Accuracy: 0%</h2>
+
+        <p id="correctWords"></p>
+
+        <p class="points" id="points">
+            Points: 0
+        </p>
+
+        <div class="answer-box">
+            <h3>Word-by-Word Correction</h3>
+
+            <p>
+                <span class="correct">Green = Correct</span><br>
+                <span class="wrong">Pink = Incorrect or extra</span><br>
+                <span class="missing">Yellow = Missing word</span>
+            </p>
+
+            <p id="result"></p>
+        </div>
+
+        <div class="answer-box">
+            <h3>Original Essay</h3>
+            <p id="originalEssay"></p>
+        </div>
+
+        <button onclick="showPage('wheelPage')">
+            ← SPIN AGAIN 🎡
+        </button>
+
+        <button onclick="retryEssay()">
+            TRY AGAIN 💗
+        </button>
+
+    </section>
+
+</div>
+
+
+<script>
+
+// ===================================
+// ORIGINAL ESSAYS
+// ===================================
+
+const essays = {
+
+"CARDIAC MUSCLE": `Begins when an action potential is generated in the sinoatrial (SA) node, the heart's natural pacemaker. This electrical impulse travels through the atria to the atrioventricular (AV) node, and then along the bundle of His, bundle branches, and Purkinje fibers, leading to the depolarization of the heart muscle. During excitation-contraction coupling, the depolarization opens voltage-gated calcium channels in the cardiac muscle membrane, allowing calcium ions (Ca?+) to enter the cells. This initial calcium influx triggers calcium-induced calcium release (CICR) from the sarcoplasmic reticulum (SR), further increasing intracellular calcium concentration.
+
+The released Ca?+ binds to troponin, causing a shift in tropomyosin that exposes binding sites on the actin filaments, allowing myosin heads to attach and form cross-bridges. During muscle contraction, the myosin heads perform a power stroke, pulling the actin filaments toward the center of the sarcomere and shortening the muscle. ATP is required for myosin head detachment and reattachment, enabling continuous cross-bridge cycling and sustained contraction.
+
+Relaxation occurs when calcium ions are actively pumped back into the sarcoplasmic reticulum, lowering cytoplasmic Ca?+ levels. As calcium concentration decreases, troponin returns to its resting shape, allowing tropomyosin to cover the actin binding sites once again. This causes the cross-bridges to break, and the actin and myosin filaments return to their resting positions. The cardiac muscle then repolarizes, restoring its resting membrane potential and preparing for the next action potential.`,
+
+"SKELETAL MUSCLE": `Start of local depolarization on axon that generate action potential via saltatory conduction of impulse until it reaches the neuromuscular junction, it releases ACh (Acetylcholine) which binds to receptors on the sarcolemma causing the ACh gated sodium channels to open, letting an influx of Na+ and causing local depolarizing of the muscle cell that will travel through the cell and won the T-tubules, reaching the Sarcoplasmic Reticulum (SR). The depolarization will activate voltage gated Ca++ channels.
+
+The action potential causes the sarcoplasmic reticulum to release Ca++ that will bind to troponin C, allowing myosin head to bind with the exposed binding site of active. Power stroke will occur where the head will tilt forward, dragging actin along with it, producing muscle contraction. ATP will bind to myosin head causing them to detach and is hydrolyzed into ADP & Phosphate, reenergizing the myosin head for another power stroke.
+
+Acety/cholinesterase (AChE) breaks down ACh in the synaptic cleft, terminating the signal. After the contraction, Cat+ is pumped back into the SR, storing it until a new muscle action potential. Ca2+ is pumped back into the sarcoplasmic reticulum by active transport, reducing calcium levels in the sarcoplasm. With lower Ca2+ levels, troponin returns to its original shape, allowing tropomyosin to cover the actin binding sites again.
+
+The muscle fiber relaxes as the cross-bridges detach and the sarcomere returns to its resting length.`,
+
+"SMOOTH MUSCLE": `Begins with the transfer of an action potential from either sympathetic or parasympathetic nerve fibers, depending on the muscle's location (parasympathetic for the small intestine and sympathetic for blood vessels). The action potential depolarizes the nerve fibers, reaching autonomic varicosities that contain neurotransmitter vesicles. Upon depolarization, these varicosities release neurotransmitters (ACh or norepinephrine) onto the smooth muscle's sarcolemma, which contains excitatory beta receptors.
+
+Activation of these receptors causes depolarization of the smooth muscle membrane and opens calcium channels, allowing calcium ions to diffuse into the sarcoplasm. The depolarization also reaches the caveolae that will excite the sarcoplasmic reticulum, releasing additional calcium ions. During contraction, the calcium ions bind to calmodulin to form a calcium-calmodulin complex that activates myosin light chain kinase (MLCK).
+
+The activated MLCK phosphorylates the myosin regulatory chain, enabling myosin to bind to actin and initiate contraction. This contraction lasts longer than in skeletal muscles due to the latch mechanism, which allows sustained force with minimal AT use. Relaxation occurs when calcium ions are pumped back into the sarcoplasmic reticulum and extracellular fluid by calcium pumps, while the enzyme myosin phosphatase dephosphorylates the myosin regulatory chain, leading to detachment from actin and relaxation of the smooth muscle.`
+
+};
+
+
+// ===================================
+// WEBSITE FUNCTIONS
+// ===================================
+
+let currentTopic = "";
+let totalPoints = 0;
+let rotation = 0;
+let spinning = false;
+
+const topics = Object.keys(essays);
+
+function showPage(pageId) {
+
+    document.querySelectorAll("section").forEach(function(page) {
+        page.classList.add("hidden");
+    });
+
+    document.getElementById(pageId).classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+}
+
+
+// SPIN THE WHEEL
+
+function spinWheel() {
+
+    if (spinning) return;
+
+    spinning = true;
+
+    document.getElementById("spinButton").disabled = true;
+
+    document.getElementById("typeButton").classList.add("hidden");
+
+    const index = Math.floor(Math.random() * topics.length);
+
+    const topic = topics[index];
+
+    const degrees = 360 / topics.length;
+
+    const target = 360 - (index * degrees + degrees / 2);
+
+    const current = rotation % 360;
+
+    const extra = (target - current + 360) % 360;
+
+    rotation += 360 * 5 + extra;
+
+    const wheel = document.getElementById("wheel");
+
+    wheel.style.transform = "rotate(" + rotation + "deg)";
+
+    document.getElementById("topic").textContent = "Spinning... 💗";
+
+    setTimeout(function() {
+
+        currentTopic = topic;
+
+        document.getElementById("topic").textContent = topic;
+
+        document.getElementById("spinButton").disabled = false;
+
+        document.getElementById("typeButton").classList.remove("hidden");
+
+        spinning = false;
+
+    }, 4100);
+
+}
+
+
+// OPEN ESSAY TYPING
+
+function startEssay() {
+
+    if (!currentTopic) return;
+
+    document.getElementById("selectedTopic").textContent = currentTopic;
+
+    document.getElementById("essayInput").value = "";
+
+    showPage("typingPage");
+}
+
+
+// NORMALIZE WORDS FOR COMPARISON
+
+function normalizeWord(word) {
+
+    return word
+        .toLowerCase()
+        .replace(/^[^a-z0-9+?]+|[^a-z0-9+?]+$/gi, "");
+
+}
+
+
+// SAFE DISPLAY OF TEXT
+
+function escapeHTML(text) {
+
+    return text.replace(/[&<>"']/g, function(character) {
+
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[character];
+
+    });
+
+}
+
+
+// CHECK ESSAY
+
+function checkEssay() {
+
+    if (!currentTopic) {
+        alert("Please spin the wheel first!");
+        return;
+    }
+
+    const userText = document.getElementById("essayInput").value.trim();
+
+    if (!userText) {
+        alert("Please type your essay first!");
+        return;
+    }
+
+    const originalText = essays[currentTopic];
+
+    const userWords = userText.split(/\s+/);
+
+    const originalWords = originalText.trim().split(/\s+/);
+
+    const u = userWords.map(function(word) {
+        return normalizeWord(word);
+    });
+
+    const c = originalWords.map(function(word) {
+        return normalizeWord(word);
+    });
+
+    // Find matching words in sequence.
+    // This helps avoid shifting all later words
+    // when one word is missing.
+
+    const rows = c.length + 1;
+    const cols = u.length + 1;
+
+    const dp = Array.from(
+        { length: rows },
+        function() {
+            return new Uint16Array(cols);
+        }
+    );
+
+    for (let i = c.length - 1; i >= 0; i--) {
+
+        for (let j = u.length - 1; j >= 0; j--) {
+
+            if (c[i] === u[j]) {
+
+                dp[i][j] = dp[i + 1][j + 1] + 1;
+
+            } else {
+
+                dp[i][j] = Math.max(
+                    dp[i + 1][j],
+                    dp[i][j + 1]
+                );
+
+            }
+        }
+    }
+
+    let i = 0;
+    let j = 0;
+    let matches = 0;
+    let comparison = [];
+
+    while (i < c.length && j < u.length) {
+
+        if (c[i] === u[j]) {
+
+            comparison.push(
+                '<span class="correct">' +
+                escapeHTML(userWords[j]) +
+                '</span>'
+            );
+
+            matches++;
+            i++;
+            j++;
+
+        } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+
+            comparison.push(
+                '<span class="missing">[MISSING: ' +
+                escapeHTML(originalWords[i]) +
+                ']</span>'
+            );
+
+            i++;
+
+        } else {
+
+            comparison.push(
+                '<span class="wrong">' +
+                escapeHTML(userWords[j]) +
+                ' [EXTRA/INCORRECT]</span>'
+            );
+
+            j++;
+
+        }
+    }
+
+    while (i < c.length) {
+
+        comparison.push(
+            '<span class="missing">[MISSING: ' +
+            escapeHTML(originalWords[i]) +
+            ']</span>'
+        );
+
+        i++;
+    }
+
+    while (j < u.length) {
+
+        comparison.push(
+            '<span class="wrong">' +
+            escapeHTML(userWords[j]) +
+            ' [EXTRA/INCORRECT]</span>'
+        );
+
+        j++;
+    }
+
+    const accuracy = Math.round(
+        matches / Math.max(c.length, u.length) * 100
+    );
+
+    const earned = accuracy;
+
+    totalPoints += earned;
+
+    document.getElementById("accuracy").textContent =
+        "Accuracy: " + accuracy + "%";
+
+    document.getElementById("correctWords").textContent =
+        "Matched " + matches + " out of " +
+        c.length + " original words.";
+
+    document.getElementById("points").textContent =
+        "Points earned: +" + earned +
+        " | Total points: " + totalPoints;
+
+    document.getElementById("result").innerHTML =
+        comparison.join(" ");
+
+    document.getElementById("originalEssay").textContent =
+        originalText;
+
+    showPage("resultPage");
+}
+
+
+// TRY THE SAME ESSAY AGAIN
+
+function retryEssay() {
+
+    document.getElementById("essayInput").value = "";
+
+    document.getElementById("selectedTopic").textContent =
+        currentTopic;
+
+    showPage("typingPage");
+}
+
+</script>
+
+</body>
+</html>
